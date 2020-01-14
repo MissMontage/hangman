@@ -1,0 +1,124 @@
+
+import java.util.Scanner;
+import java.util.Random;
+public class HangmanEn {
+static Scanner scan=new Scanner(System.in);
+//Introduction, calling menu;
+	public static void main(String[] args) {
+		System.out.println("##########################################################################");
+		System.out.println
+		(	"# Try to find out a word - a verb, adjective or noun                     # \n# - also plural. Guess single letters. This letter will be shown as      #\n# often and where it occurs. Otherwise? You'll see ;-)                   # \n##########################################################################");	
+		menue();
+	}
+//Array of words, random number generator pulls a word to guess.
+	public static String wortpool() {
+	Random rand=new Random();
+	int number=rand.nextInt(165);
+	String unknown="";
+	String[]wortpool= {"acrobatic", "ceremony", "receive", "coward", "compartment", "sleeve","diligent", "amber", "plastic", "mandatory", "relationship", "evaluate", "zip", "ring", "cruise", "tear", "energy", "ivy", "spectator", "factory", "romantic", "family", "shine", "garden", "hospital", "paste", "hideout", "hibernation", "pyramid", "appear", "curfew", "logic", "sinister", "cemetary", "unfortunate", "serene", "spaghetti", "eye,", "cactus", "poem", "apple", "passport","nun", "buoy", "blowpipe", "hand", "motor", "money", "pinch", "separation", "Orient", "whip", "mercenary", "shopping cart", "imitate", "nanny", "toothpaste", "shim", "singular", "society", "belfry", "quill", "distinguish", "emotion", "mouthpiece", "candlelight", "drool", "writer", "thaw", "tetanus", "diagonal", "leaf", "mule", "volleyball", "uniform", "congress", "sideburns", "wheelbarrow", "boat", "question", "day", "steep", "hard", "avoid", "murmur", "breakdown", "lion", "abyss", "payment", "sleigh", "artist", "ascension", "axe", "bill", "bell", "press", "astronaut", "player", "audience", "crab", "term", "harmless", "nervous", "antilope", "expression", "crust", "academy", "handlebar", "stone", "human", "stupefy", "program", "robber", "cangoroo", "chamaeleon", "appetite", "equipment", "right", "clock", "stone", "ornamental", "duel", "hangover", "beam", "honest", "fighter", "diabolic", "travel guide", "chain", "hiss" , "complaint", "arrow", "villain", "tender", "hefty", "reunion", "freckles", "description", "emerge", "emergency", "rain", "urgent", "excellent", "dork", "bear", "behavior", "carrot", "frustration", "gallery", "Entdeckung", "Klinge", "dreckig", "beseitigen", "Kohle", "Symbol", "heiß", "stumpf", "Biologie", "sugar", "patch", "beggar", "open", "divine", "civilisation", "instrument", "plearsure", "accordion", "violoncello", "fagott", "clarinet" };     
+	unknown=wortpool[number];
+	return unknown;
+}
+	//ascii art to draw the gallows  
+public static void gallows(int y) {
+String[] gallows=new String[8]; 	
+//upwards movement	
+gallows[0]="          |\n__________|_______\n|                |";
+gallows[1]="          |";
+gallows[2]="          |";
+gallows[3]="          |";
+gallows[4]="          |";
+gallows[5]="          |";
+gallows[6]="          ___________";
+//downwards movement
+if (y>6) {
+	gallows[5]+= "        |";
+
+if (y>7) {
+	gallows[4]+= "        0 ";
+}
+if (y>8) {
+	gallows[3]+= "       /|"+(char)92;
+}
+if (y>9) { 
+	gallows[2]+= "        |";
+}
+if (y>10) {
+	gallows[1]+= "       / "+(char)92;
+}
+}
+
+
+if (y<=6)		 
+for(int x=y;x>=0;x--) {
+		System.out.println(gallows[x]);
+	}
+else {
+	for(int x=12-y ;x>6;x--) {
+		System.out.println(gallows[x]);
+	}
+	for( int x=6; x>=0;x--){
+		System.out.println(gallows[x]);
+		}
+	
+	}
+}
+
+
+	public static void menue() {
+	System.out.println("Please choose: \n(N)ew game\n(E)xit.");
+	String choice=scan.next();
+	if(choice.toLowerCase().equals("n")){
+		spiel();
+	}
+		else
+	System.out.println("Goodbye...");		
+	System.exit(0);	
+	}
+	//the game
+public static void spiel() {
+	String what=wortpool();
+	char[]unknown=what.toLowerCase().toCharArray();
+	StringBuilder guess=new StringBuilder("");
+	for(int i=0; i<unknown.length; i++) {
+		guess.append("_ ");
+	}
+	// .repeat() does the same as line 82-83, but it doesn't work on older java versions 
+	//StringBuilder guess=new StringBuilder("_ ".repeat(unknown.length));
+	
+	System.out.println(guess);
+	int countrounds=0;
+	//delimiting the possible rounds by 11, finishing when the guessed word is complete
+	while(countrounds<11 && guess.toString().contains("_ ")) {
+// scan input for the first letter, convert it to lower case		
+		char letter=scan.next().toLowerCase().charAt(0);
+//set a counter for each letter
+		int letterCount=0;
+		for(int i=0; i<unknown.length; i++) {
+			if (letter==unknown[i]) {
+//replace underlines in guess by guessed letter and raise counter
+				guess.setCharAt(2*i, what.charAt(i));
+			 letterCount++;
+			}
+		}
+		System.out.println (guess);
+		System.out.println("");
+//if guessed letter does not occur raise counter and draw gallows
+		if (letterCount==0) {
+			countrounds++;
+		gallows(countrounds);
+		System.out.println();
+			}
+		}
+	
+//print solution if word has not  been guessed
+	if(countrounds==11) {
+	System.out.println("The word in question was "+ what);
+	menue();
+}
+//print congrats if all underlines in guess have been replaced by letters
+if(!guess.toString().contains("_ ")) {
+	System.out.println("Congratulations!");
+	menue();
+	}
+}}
